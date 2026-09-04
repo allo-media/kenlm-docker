@@ -1,4 +1,4 @@
-FROM python:3.8
+FROM debian:trixie-slim
 
 WORKDIR /
 
@@ -13,11 +13,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     zlib1g-dev \
     libbz2-dev \
     liblzma-dev \
+    git \
+    ca-certificates \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-RUN git clone https://github.com/kpu/kenlm /opt/kenlm
+RUN git clone https://github.com/allo-media/kenlm.git /opt/kenlm
 RUN mkdir -p /opt/kenlm/build && cd /opt/kenlm/build \
     && cmake .. \
-    && make -j $(nproc)
-
-RUN pip install git+https://github.com/kpu/kenlm.git
+    && make -j $(nproc) \
+    && make install
